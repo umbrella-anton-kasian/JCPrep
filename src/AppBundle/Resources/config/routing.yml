@@ -1,0 +1,86 @@
+post_get_all:
+    pattern:  /api/v1/post
+    defaults: { _controller: AppBundle:PostRest:getList, _format: json }
+    requirements:
+        _method: GET
+
+post_get:
+    pattern:  /api/v1/post/{id}
+    defaults: { _controller: AppBundle:PostRest:get, _format: json }
+    requirements:
+        _method: GET
+
+post_create:
+    pattern:  /api/v1/post
+    defaults: { _controller: AppBundle:PostRest:create, _format: json }
+    requirements:
+        _method: POST
+
+post_update:
+    pattern:  /api/v1/post/{id}
+    defaults: { _controller: AppBundle:PostRest:update, _format: json }
+    requirements:
+        _method: PUT
+
+post_delete:
+    pattern:  /api/v1/post/{id}
+    defaults: { _controller: AppBundle:PostRest:delete, _format: json }
+    requirements:
+        _method: DELETE
+
+comment_get_all:
+    pattern:  /api/v1/comment
+    defaults: { _controller: AppBundle:CommentRest:getList, _format: json }
+    requirements:
+        _method: GET
+
+comment_get:
+    pattern:  /api/v1/comment/{id}
+    defaults: { _controller: AppBundle:CommentRest:get, _format: json }
+    requirements:
+        _method: GET
+
+comment_create:
+    pattern:  /api/v1/comment
+    defaults: { _controller: AppBundle:CommentRest:create, _format: json }
+    requirements:
+        _method: POST
+
+comment_update:
+    pattern:  /api/v1/comment/{id}
+    defaults: { _controller: AppBundle:CommentRest:update, _format: json }
+    requirements:
+        _method: PUT
+
+comment_delete:
+    pattern:  /api/v1/comment/{id}
+    defaults: { _controller: AppBundle:CommentRest:delete, _format: json }
+    requirements:
+        _method: DELETE
+
+populate_nested_tree:
+    pattern:  /tree/nested/populate
+    defaults: { _controller: AppBundle:TreeTest:nestedTreePopulate }
+
+get_nested_tree:
+    pattern:  /tree/nested/children
+    defaults: { _controller: AppBundle:TreeTest:nestedTreeChildren }
+
+count_nested_tree:
+    pattern:  /tree/nested/count
+    defaults: { _controller: AppBundle:TreeTest:nestedTreeChildCount }
+
+populate_materialized_path_tree:
+    pattern:  /tree/materialized-path/populate
+    defaults: { _controller: AppBundle:TreeTest:materializedPathTreePopulate }
+
+get_materialized_path_tree:
+    pattern:  /tree/materialized-path/children
+    defaults: { _controller: AppBundle:TreeTest:matpathTreeChildren }
+
+get_materialized_count_path_tree:
+    pattern:  /tree/matherialized/count
+    defaults: { _controller: AppBundle:TreeTest:materializedTreeChildCount }
+    
+
+
