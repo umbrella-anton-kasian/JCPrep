@@ -3,30 +3,40 @@ version: 2.1
 jobs:
   build:
     machine:
-      environment:
-        APPLICATION_ENV: testing
-
-      php:
-        version: 5.5.21
-
-      node:
-        version: 6.10.3
-
-      ruby:
-        version: 2.0.0-p648
+      image: ubuntu-1604:latest
     steps:
       - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            # "composer.lock" can be used if it is committed to the repo
-            - v1-dependencies-{{ checksum "composer.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-      - run: composer install -n --prefer-dist
-
-      - save_cache:
-          key: v1-dependencies-{{ checksum "composer.json" }}
-          paths:
-            - ./vendor
+      - run: apt-get update
+      # Install PHP 5.6
+      - run: apt-get install -y language-pack-en-base
+      - run: export LC_ALL=en_US.UTF-8
+      - run: export LANG=en_US.UTF-8
+      - run: apt-get install -y software-properties-common
+      - run: add-apt-repository -y ppa:ondrej/php
+      - run: apt-get update
+      - run: apt-get -y upgrade
+      - run: apt install -y php5.6 php5.6-common php5.6-opcache php5.6-mcrypt php5.6-cli php5.6-gd php5.6-curl php5.6-mysql
+      # Install MySQL 5.7
+      - run: DEBIAN_FRONTEND=noninteractive apt-get install -y mysql-server-5.7
+      # Config MySQL
+      - run: echo '[client]' | sudo sh -c 'cat >>  /etc/mysql/my.cnf';
+      - run: echo 'default-character-set=utf8mb4' | sudo sh -c 'cat >>  /etc/mysql/my.cnf';
+      - run: echo '[mysql]' | sudo sh -c 'cat >>  /etc/mysql/my.cnf';
+      - run: echo 'default-character-set=utf8mb4' | sudo sh -c 'cat >>  /etc/mysql/my.cnf';
+      - run: echo '[mysqld]' | sudo sh -c 'cat >>  /etc/mysql/my.cnf';
+      - run: echo 'collation-server = utf8mb4_general_ci' | sudo sh -c 'cat >>  /etc/mysql/my.cnf';
+      - run: echo "init-connect='SET NAMES utf8mb4'" | sudo sh -c 'cat >>  /etc/mysql/my.cnf';
+      - run: echo 'character-set-server = utf8mb4' | sudo sh -c 'cat >>  /etc/mysql/my.cnf';
+      - run: echo 'innodb_flush_log_at_trx_commit=2' | sudo sh -c 'cat >>  /etc/mysql/my.cnf';
+      - run: echo 'sync_binlog=0' | sudo sh -c 'cat >>  /etc/mysql/my.cnf';
+      - run: service mysql restart
+      # Install node 6.x
+      - run: apt-get install -y curl
+      - run: curl -sL https://deb.nodesource.com/setup_6.x | bash -
+      - run: apt-get install -y nodejs
+      # Install Ruby 2.0.0
+      - run: apt-add-repository -y ppa:rael-gc/rvm
+      - run: apt-get update
+      - run: apt-get install -y rvm
+      - run: source /usr/share/rvm/scripts/rvm
+      - run: gem install --no-ri --no-rdoc --conservative afm:0.2.2 Ascii85:1.0.2 bigdecimal:1.2.0 hashery:2.1.2 json:1.8.3 mini_portile2:2.1.0 nokogiri:1.6.8.1 rdoc:4.2.2 ruby-rc4:0.1.5 redcarpet:3.4.0 reverse_markdown:1.0.3 ya2yaml:0.31 ttfunk:1.4.0 pdf-reader:1.4.1 syck:1.2.0 psych:2.0.0
